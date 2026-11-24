@@ -246,9 +246,12 @@ def logarithmic_negativity(V, g=np.sqrt(2)):
         that is described by the the Wigner covariance matrix V.
 
     """
-    A = 0.5 * V[0:2, 0:2] * g ** 2
-    B = 0.5 * V[2:4, 2:4] * g ** 2
-    C = 0.5 * V[0:2, 2:4] * g ** 2
+    # Work in units where hbar = 1 (g = sqrt(2)). The whole matrix has to be
+    # rescaled, since det(V) enters the symplectic eigenvalue below.
+    V = 0.5 * g ** 2 * np.asarray(V)
+    A = V[0:2, 0:2]
+    B = V[2:4, 2:4]
+    C = V[0:2, 2:4]
     sigma = np.linalg.det(A) + np.linalg.det(B) - 2 * np.linalg.det(C)
     nu_ = sigma / 2 - np.sqrt(sigma ** 2 - 4 * np.linalg.det(V)) / 2
     if nu_ < 0.0:
